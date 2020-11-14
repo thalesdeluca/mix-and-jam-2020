@@ -3,7 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class SpecialAction : Action {
-  public override void Use() {
+  public float damage = 80;
 
+  public override void Use() {
+    if (used) {
+      return;
+    }
+
+    var action = Input.GetButtonDown("Action");
+
+    if (action) {
+      used = true;
+      GameController.Instance.Damage(damage);
+    }
+    Destroy(this);
   }
 }

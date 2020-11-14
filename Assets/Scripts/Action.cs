@@ -1,6 +1,6 @@
 using UnityEngine;
 
 public abstract class Action : MonoBehaviour {
-  public float damage = 20;
+  public bool used = false;
   public abstract void Use();
 }

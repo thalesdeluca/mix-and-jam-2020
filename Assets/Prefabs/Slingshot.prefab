@@ -129,7 +129,7 @@ MonoBehaviour:
   canAim: 0
   aimPrefab: {fileID: 6332823279230049000, guid: b7429cb543b43fc4697fdbfc73afd722,
     type: 3}
-  aimPosition: {fileID: 0}
+  aimSpeed: 2.5
   projectilePrefab: {fileID: 6086636610723855014, guid: 08d11b0b04b8a8d48a2f09874ddd3b28,
     type: 3}
   projectileMuzzle: {fileID: 3745358648053345118}

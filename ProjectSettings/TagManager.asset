@@ -19,10 +19,10 @@ TagManager:
   - Projectile
   - Cards
   - Aim
-  - 
-  - 
-  - 
-  - 
+  - EnemyBounds
+  - Enemy
+  - Player
+  - Action
   - 
   - 
   - 

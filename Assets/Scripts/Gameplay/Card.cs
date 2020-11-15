@@ -55,7 +55,7 @@ public class Card : MonoBehaviour {
   }
 
   void Generate() {
-    var rand = Random.Range(0, 4);
+    var rand = 3; //Random.Range(0, 4);
     RandomizeDirection();
     if (GameController.Instance.gauge >= 100f) {
       moveSpeed = initialMoveSpeed * (GameController.Instance.gauge / 100);
@@ -70,16 +70,16 @@ public class Card : MonoBehaviour {
     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
     switch (action) {
       case ActionCards.Focus:
-        GameController.Instance.gameObject.AddComponent<FocusAction>();
+        GameObject.Find("Player").AddComponent<FocusAction>();
         break;
       case ActionCards.Guard:
-        GameController.Instance.gameObject.AddComponent<GuardAction>();
+        GameObject.Find("Player").AddComponent<GuardAction>();
         break;
       case ActionCards.Neutral:
-        GameController.Instance.gameObject.AddComponent<NeutralAction>();
+        GameObject.Find("Player").AddComponent<NeutralAction>();
         break;
       case ActionCards.Special:
-        GameController.Instance.gameObject.AddComponent<SpecialAction>();
+        GameObject.Find("Player").AddComponent<SpecialAction>();
         break;
       default:
         return;

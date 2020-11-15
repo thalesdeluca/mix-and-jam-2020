@@ -30,7 +30,6 @@ public class SlingshotController : MonoBehaviour {
   }
   void OnDestroy() {
     GameController.updateState -= EnableAim;
-    Debug.Log("INIT AIM");
   }
 
 
@@ -85,7 +84,6 @@ public class SlingshotController : MonoBehaviour {
 
   public void EnableAim() {
     if (GameController.Instance.state == GameState.Preparation) {
-      Debug.Log("AIM");
       if (aim) {
         Destroy(aim);
       }
@@ -100,7 +98,6 @@ public class SlingshotController : MonoBehaviour {
   }
 
   public void EnableAim(Vector2 aimVector) {
-    Debug.Log("aIM2" + aim);
     if (GameController.Instance.state == GameState.Preparation) {
       aim = Instantiate(aimPrefab);
       aim.transform.position = aimVector;

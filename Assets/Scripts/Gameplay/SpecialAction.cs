@@ -6,29 +6,31 @@ public class SpecialAction : Action {
 
   public int frames = 250;
 
-  private int hitFrame = 30;
+  private int hitFrame = 70;
 
-  private int endFrame = 50;
+  private int endFrame = 230;
 
   private Controller controller;
 
-  private GameObject hitbox;
-
-
   void Start() {
     range = 6f;
-    damage = 80f;
-    controller = GetComponent<Controller>();
+    damage = 200f;
+    var obj = this.gameObject.name == "Enemy" ? this.gameObject : GameController.Instance.gameObject;
+    controller = obj.GetComponent<Controller>();
+
   }
 
   void Update() {
-    if (!GameController.Instance.ready) {
+    if (!GameController.Instance.ready && GameController.Instance.state != GameState.Battle) {
       return;
     }
 
     if (used) {
       if (controller.frames == hitFrame) {
         hitbox = InstantiateHitbox();
+        if (hitbox == null) {
+          return;
+        }
       }
 
       if (controller.frames == endFrame && hitbox) {
@@ -40,20 +42,33 @@ public class SpecialAction : Action {
       }
     }
 
-    if (this.gameObject.name == "GameController") {
+    if (this.gameObject.name == "Player") {
       var action = Input.GetButtonDown("Action");
       if (action) {
+        if (used) {
+          return;
+        }
         GameController.Instance.WaitFrames(Use());
       }
     }
   }
 
   GameObject InstantiateHitbox() {
+    if (GameController.Instance.state != GameState.Battle) {
+      return null;
+    }
+
     GameObject obj = this.gameObject.name == "Enemy" ? this.gameObject : GameObject.Find("Player");
 
     var size = obj.GetComponent<BoxCollider2D>().bounds.size;
-    Vector2 offset = (Vector2)obj.transform.position + new Vector2(size.x, 0);
-    return Instantiate(GameController.Instance.hitbox, offset, Quaternion.identity, obj.transform);
+
+    var gameObject = Instantiate(GameController.Instance.hitbox, obj.transform);
+    Vector2 offset = this.gameObject.name == "Enemy" ? -new Vector2((range / 2f) + 0.5f, 0)
+  : new Vector2((range / 2f) + 0.5f, 0);
+    gameObject.transform.localScale = new Vector3(range, 1, 1);
+    gameObject.transform.localPosition = offset;
+
+    return gameObject;
   }
 
   public override int Use() {

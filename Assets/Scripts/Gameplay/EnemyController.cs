@@ -23,7 +23,7 @@ public class EnemyController : Controller {
 
   public bool guarding = false;
   public float moveSpeed = 3f;
-  public float jumpForce = 80f;
+  public float jumpForce = 20f;
   public bool canMove = false;
   private Rigidbody2D rigidbody;
   public bool isGrounded = false;
@@ -39,10 +39,11 @@ public class EnemyController : Controller {
 
   public float actionTime = 0f;
 
+  private DamageController damageController;
 
   void Start() {
     rigidbody = GetComponent<Rigidbody2D>();
-
+    damageController = GetComponent<DamageController>();
   }
 
   void Awake() {
@@ -66,25 +67,45 @@ public class EnemyController : Controller {
       return;
     }
 
+    if (state == EnemyState.Knockback && !damageController.onKnockback) {
+      ChangeState(EnemyState.Moving);
+    }
+
+
     if (state == EnemyState.Attacking) {
       if (frames < waitFrames) {
         frames++;
         return;
       }
       ChangeState(EnemyState.Moving);
+      Destroy(action);
       frames = 0;
     }
 
-    var player = GameObject.Find("Player");
-    ChangeState(EnemyState.Moving);
-    var distance = Vector2.Distance(player.transform.position, rigidbody.position);
 
 
-    GetDirection(player, actionTime >= actionTimeReset);
-    Move();
+    if (state == EnemyState.Knockback) {
+      MoveKnockback();
+    } else {
+      var player = GameObject.Find("Player");
+
+      var distance = Vector2.Distance(player.transform.position, rigidbody.position);
 
 
-    CheckAction(distance);
+      GetDirection(player, actionTime >= actionTimeReset);
+      if (distance <= 1.5) {
+        direction = new Vector2(rigidbody.position.x - player.transform.position.x, direction.y).normalized;
+
+        if (behaviour == EnemyBehaviour.Recover) {
+          direction.x *= -1;
+          Jump();
+        }
+      }
+
+      Move();
+
+      CheckAction(distance);
+    }
 
     actionTime += Time.deltaTime;
   }
@@ -94,11 +115,14 @@ public class EnemyController : Controller {
       actionTime = 0;
       if (action) {
         if (distance < action.range) {
-          var shouldAttack = System.Convert.ToBoolean(Random.Range(0, 2));
+          var shouldAttack = System.Convert.ToBoolean(Random.Range(0, 3));
 
 
           if (shouldAttack) {
             ChangeState(EnemyState.Attacking);
+            if (EnemyState.Attacking == state) {
+              return;
+            }
             WaitFrames(action.Use());
           }
         }
@@ -113,33 +137,48 @@ public class EnemyController : Controller {
     }
 
     if (shouldUpdate) {
+      behaviour = behaviour != EnemyBehaviour.Recover ? GetBehaviour() : behaviour;
       if (behaviour == EnemyBehaviour.Agressive) {
         direction = new Vector2(player.transform.position.x - rigidbody.position.x, rigidbody.velocity.y).normalized;
-      } else if (behaviour == EnemyBehaviour.Evasive) {
-        direction = new Vector2((player.transform.position.x - rigidbody.position.x) * -1, rigidbody.velocity.y).normalized;
-      } else if (behaviour == EnemyBehaviour.Defensive) {
+      } else if (behaviour == EnemyBehaviour.Defensive || behaviour == EnemyBehaviour.Evasive) {
         var towards = Random.Range(0, 2);
         towards = towards == 0 ? -1 : towards;
         direction = new Vector2((player.transform.position.x - rigidbody.position.x) * towards, rigidbody.velocity.y).normalized;
       } else {
-        direction = new Vector2(-this.transform.position.x, 0).normalized;
+        direction = new Vector2(-1, 0).normalized;
       }
     }
   }
 
   void Move() {
-    Debug.Log("move " + state);
     if (state == EnemyState.Attacking) {
       return;
     }
     this.rigidbody.velocity = new Vector2(direction.normalized.x * moveSpeed, rigidbody.velocity.y);
+    ChangeState(EnemyState.Moving);
+    if (this.rigidbody.velocity.x < 0 && this.rigidbody.transform.position.x <= -1) {
+      this.rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+    }
   }
 
-  void ChangeState(EnemyState newState) {
+  void MoveKnockback() {
+
+    if (damageController.onKnockback) {
+      return;
+    }
+
+    this.rigidbody.velocity = new Vector2(-moveSpeed / 4, this.rigidbody.velocity.y);
+
+    if (this.rigidbody.velocity.x <= -moveSpeed / 2) {
+      this.rigidbody.velocity = new Vector2(-moveSpeed / 2, rigidbody.velocity.y);
+    }
+
+  }
+
+  public void ChangeState(EnemyState newState) {
     if (behaviour == EnemyBehaviour.Recover) {
       return;
     }
-    Debug.Log("STATE CHANGED TO " + newState);
     state = newState;
   }
 
@@ -151,10 +190,12 @@ public class EnemyController : Controller {
   }
 
   void Prepare() {
-    Debug.Log("PREPARE");
     if (GameController.Instance.state != GameState.Preparation) {
       this.rigidbody.gravityScale = 1;
       return;
+    }
+    if (action) {
+      Destroy(action);
     }
 
     var rand = Random.Range(0, 4);
@@ -165,9 +206,8 @@ public class EnemyController : Controller {
       }
     }
 
-    Debug.Log("PREPARE2");
     ActionCards card = (ActionCards)rand;
-    Debug.Log("card" + card);
+
     switch (card) {
 
       case ActionCards.Neutral:
@@ -224,13 +264,12 @@ public class EnemyController : Controller {
     if (!isGrounded) {
       return;
     }
-    Vector2 jumpVector = new Vector2(0, jumpForce);
+    Vector2 jumpVector = new Vector2(0, jumpForce * 3);
     rigidbody.AddForce(jumpVector);
-    Debug.Log("JUMPED");
+
   }
 
   private void OnTriggerExit2D(Collider2D other) {
-    Debug.Log("OUT OUIT");
 
     if (other.gameObject.name == "Stage") {
       isGrounded = false;
@@ -240,10 +279,10 @@ public class EnemyController : Controller {
       behaviour = EnemyBehaviour.Recover;
       ChangeState(EnemyState.Moving);
       GetDirection(GameObject.Find("Player"), true);
-      Jump();
     }
-
   }
+
+
 
   private void OnTriggerEnter2D(Collider2D other) {
     if (other.gameObject.name == "Stage") {

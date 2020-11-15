@@ -157,7 +157,7 @@ public class GameController : Controller {
       ready = false;
       camera.GetComponent<CameraController>().MoveTo(new Vector3(0, 0f, -10));
     }
-    Debug.Log("State" + newState);
+
     state = newState;
     updateState();
   }
@@ -183,6 +183,7 @@ public class GameController : Controller {
     if (GameController.Instance.state == GameState.Battle) {
       this.waitFrames = frames;
       this.frames = 0;
+      playerState = PlayerState.Attacking;
     }
   }
 

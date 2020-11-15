@@ -10,12 +10,12 @@ public class NeutralAction : Action {
 
   private Controller controller;
 
-  private GameObject hitbox;
-
   void Start() {
     range = 2f;
-    damage = 20f;
-    controller = GetComponent<Controller>();
+    damage = 60f;
+    var obj = this.gameObject.name == "Enemy" ? this.gameObject : GameController.Instance.gameObject;
+    controller = obj.GetComponent<Controller>();
+
   }
 
   void Update() {
@@ -37,9 +37,12 @@ public class NeutralAction : Action {
       }
     }
 
-    if (this.gameObject.name == "GameController") {
+    if (this.gameObject.name == "Player") {
       var action = Input.GetButtonDown("Action");
       if (action) {
+        if (used) {
+          return;
+        }
         GameController.Instance.WaitFrames(Use());
       }
     }
@@ -48,9 +51,12 @@ public class NeutralAction : Action {
   GameObject InstantiateHitbox() {
     GameObject obj = this.gameObject.name == "Enemy" ? this.gameObject : GameObject.Find("Player");
 
-    var size = obj.GetComponent<BoxCollider2D>().bounds.size;
-    Vector2 offset = (Vector2)obj.transform.position + new Vector2(size.x, 0);
-    return Instantiate(GameController.Instance.hitbox, offset, Quaternion.identity, obj.transform);
+    var gameObject = Instantiate(GameController.Instance.hitbox, obj.transform);
+    Vector2 offset = this.gameObject.name == "Enemy" ? -new Vector2((range / 2f) + 0.5f, 0)
+  : new Vector2((range / 2f) + 0.5f, 0);
+    gameObject.transform.localScale = new Vector3(range, 1, 1);
+    gameObject.transform.localPosition = offset;
+    return gameObject;
   }
 
   public override int Use() {

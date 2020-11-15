@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class GuardAction : Action {
   public int frames = 180;
-  private int hitFrame = 30;
+  private int hitFrame = 10;
 
-  private int endFrame = 50;
+  private int endFrame = 100;
 
   private Controller controller;
 
-  private GameObject hitbox;
 
 
   void Start() {
     range = 0f;
-    controller = GetComponent<Controller>();
+    var obj = this.gameObject.name == "Enemy" ? this.gameObject : GameController.Instance.gameObject;
+    controller = obj.GetComponent<Controller>();
+
   }
 
   void Update() {
@@ -30,10 +31,13 @@ public class GuardAction : Action {
     }
 
 
-    if (this.gameObject.name == "GameController") {
+    if (this.gameObject.name == "Player") {
       var action = Input.GetButtonDown("Action");
       if (action) {
-        GameController.Instance.WaitFrames(Use());
+        if (used) {
+          return;
+        }
+        GameController.Instance.Guard(Use());
       }
     }
 

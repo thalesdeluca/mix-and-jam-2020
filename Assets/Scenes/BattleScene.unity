@@ -197,6 +197,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gauge: 0
+  knockbackTime: 2
+  time: 0
+  canBeKnockedback: 0
+  onKnockback: 0
 --- !u!1 &115316746
 GameObject:
   m_ObjectHideFlags: 0
@@ -708,7 +712,21 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: -0.9767606, y: 0.33324075}
-      - {x: -0.92814034, y: 9.268012}
+      - {x: -1.4325424, y: 1.7642376}
+      - {x: -1.6231991, y: 9.136981}
+      - {x: -1.2791104, y: 13.002402}
+      - {x: 1.1297586, y: 12.741099}
+      - {x: 1.4827619, y: 8.245702}
+      - {x: 1.6552353, y: 4.8517494}
+      - {x: 1.4961823, y: 1.4084382}
+      - {x: 0.8202986, y: -0.58059144}
+      - {x: 1.6026307, y: -1.1995623}
+      - {x: 2.0692492, y: -0.69902277}
+      - {x: 2.0160785, y: 6.691906}
+      - {x: 1.5574846, y: 12.655852}
+      - {x: 0.4137331, y: 19.269054}
+      - {x: -2.2320187, y: 15.691937}
+      - {x: -2.0594058, y: 0.06651759}
       - {x: -1.0767518, y: -0.5473242}
       - {x: -0.5842416, y: -0.48853314}
       - {x: -0.49939215, y: -0.4741603}
@@ -860,14 +878,14 @@ MonoBehaviour:
   behaviour: 2
   gauge: 0
   guarding: 0
-  moveSpeed: 300
-  jumpForce: 80
+  moveSpeed: 3
+  jumpForce: 20
   canMove: 0
   isGrounded: 0
   initialPosition: {fileID: 1295468574}
   direction: {x: 0, y: 0}
   action: {fileID: 0}
-  actionTimeReset: 5
+  actionTimeReset: 3
   actionTime: 5
 --- !u!50 &431322578
 Rigidbody2D:
@@ -981,6 +999,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gauge: 0
+  knockbackTime: 2
+  time: 0
+  canBeKnockedback: 0
+  onKnockback: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1496,8 +1518,8 @@ MonoBehaviour:
   pamphlet: {fileID: 1469646065}
   victory: {fileID: 244611125}
   playerState: 1
-  battleTime: 15
-  preparationTime: 5
+  battleTime: 10
+  preparationTime: 7
   time: 0
   readyTime: 3
   ready: 0
@@ -2633,7 +2655,7 @@ PrefabInstance:
     - target: {fileID: 4867154727138092583, guid: df696a86b283a3a43aeab5ca317f3d7a,
         type: 3}
       propertyPath: aimSpeed
-      value: 2.5
+      value: 4.3
       objectReference: {fileID: 0}
     - target: {fileID: 8270926531245790457, guid: df696a86b283a3a43aeab5ca317f3d7a,
         type: 3}
@@ -2780,7 +2802,7 @@ PrefabInstance:
     - target: {fileID: 780158748306019757, guid: 4ae2e171b4984334c9173dedbbbd81b7,
         type: 3}
       propertyPath: moveSpeed
-      value: 300
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 780158748306019757, guid: 4ae2e171b4984334c9173dedbbbd81b7,
         type: 3}
@@ -2871,6 +2893,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Constraints
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4619317320420592038, guid: 4ae2e171b4984334c9173dedbbbd81b7,
+        type: 3}
+      propertyPath: m_Mass
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 9125210070570074026, guid: 4ae2e171b4984334c9173dedbbbd81b7,
         type: 3}

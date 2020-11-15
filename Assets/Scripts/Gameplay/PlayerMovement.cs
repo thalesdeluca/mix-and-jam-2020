@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour {
   // Update is called once per frame
   void Update() {
     var horizontal = Input.GetAxisRaw("Horizontal");
-    var jump = Input.GetAxis("Jump");
+    var jump = Input.GetAxisRaw("Jump");
 
     if (GameController.Instance.state == GameState.Preparation) {
       ToInitial();
@@ -40,9 +40,19 @@ public class PlayerMovement : MonoBehaviour {
     if (canMove) {
       rigidbody.velocity = new Vector2(horizontal * moveSpeed, rigidbody.velocity.y);
 
+      if (rigidbody.transform.position.x >= 1 && rigidbody.velocity.x > 0) {
+        rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+      }
+
+
       if (isGrounded) {
-        Vector2 jumpVector = new Vector2(rigidbody.velocity.x, jumpForce);
-        rigidbody.velocity = jumpVector;
+        if (jump > 0) {
+          if (rigidbody.velocity.y < jumpForce) {
+            Vector2 jumpVector = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y + 1);
+            rigidbody.velocity = jumpVector;
+          }
+
+        }
       }
 
       if (GameController.Instance.playerState == PlayerState.Attacking) {

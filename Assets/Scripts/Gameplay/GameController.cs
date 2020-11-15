@@ -12,7 +12,8 @@ public enum GameState {
 
 public enum PlayerState {
   Attacking,
-  Moving
+  Moving,
+  Knockback
 }
 
 public class GameController : Controller {
@@ -54,13 +55,17 @@ public class GameController : Controller {
 
   public GameObject hitbox;
 
+  private DamageController damage;
+
   // Start is called before the first frame update
   void Start() {
-    ChangePhase(GameState.Preparation);
+    ChangePhase(GameState.Initial);
+
+    damage = GetComponent<DamageController>();
     showPamphlet = true;
 
     if (pamphlet) {
-      //pamphlet.SetActive(true);
+      pamphlet.SetActive(true);
     }
   }
 
@@ -89,6 +94,15 @@ public class GameController : Controller {
         if (!ready && time >= readyTime) {
           ready = true;
           time = 0;
+        }
+
+        if (playerState == PlayerState.Knockback) {
+          if (!damage.onKnockback) {
+            playerState = PlayerState.Moving;
+            updateState();
+            return;
+          }
+
         }
 
         if (playerState == PlayerState.Attacking) {
@@ -201,6 +215,18 @@ public class GameController : Controller {
     playerState = PlayerState.Attacking;
     waitFrames = framesToWait;
     frames = 0;
+  }
+
+  public void Knockback() {
+    if (state == GameState.Battle) {
+      if (!guarding) {
+        guarding = false;
+        return;
+      }
+
+      playerState = PlayerState.Knockback;
+    }
+
   }
 
 

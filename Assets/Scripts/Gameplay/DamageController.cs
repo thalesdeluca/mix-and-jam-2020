@@ -58,10 +58,15 @@ public class DamageController : MonoBehaviour {
     var rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
     var direction = this.gameObject.name == "Player" ? -1 : 1;
     //rigidbody.velocity = new Vector2(rigidbody.velocity.x + (gauge * direction / 2f), rigidbody.velocity.y);
-    rigidbody.AddForce(new Vector2((gauge * direction / 70), damage / 100), ForceMode2D.Impulse);
+    rigidbody.AddForce(new Vector2((gauge * direction / 10), damage / 60), ForceMode2D.Impulse);
 
     if (this.gameObject.name == "Enemy") {
       GetComponent<EnemyController>().ChangeState(EnemyState.Knockback);
+    }
+
+
+    if (this.gameObject.name == "Player") {
+      GameController.Instance.Knockback();
     }
     Debug.Log("knockback");
     canBeKnockedback = false;

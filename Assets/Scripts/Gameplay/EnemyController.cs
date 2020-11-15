@@ -119,10 +119,12 @@ public class EnemyController : Controller {
 
 
           if (shouldAttack) {
-            ChangeState(EnemyState.Attacking);
             if (EnemyState.Attacking == state) {
               return;
             }
+
+            ChangeState(EnemyState.Attacking);
+
             WaitFrames(action.Use());
           }
         }

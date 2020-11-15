@@ -38,11 +38,20 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     if (canMove) {
-      rigidbody.velocity = new Vector2(horizontal * moveSpeed, rigidbody.velocity.y);
+      if (horizontal != 0) {
+        rigidbody.velocity = new Vector2(horizontal * moveSpeed, rigidbody.velocity.y);
+        var enemy = GameObject.Find("Enemy");
+        var playerX = this.rigidbody.position.x + this.GetComponent<BoxCollider2D>().bounds.size.x / 2;
+        var enemyX = enemy.transform.position.x - enemy.GetComponent<BoxCollider2D>().bounds.size.x / 2;
+        if (playerX >= enemyX) {
+          rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+        }
 
-      if (rigidbody.transform.position.x >= 1 && rigidbody.velocity.x > 0) {
-        rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+        if (rigidbody.transform.position.x >= 1 && rigidbody.velocity.x > 0 && GameController.Instance.playerState != PlayerState.Knockback) {
+          rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+        }
       }
+
 
 
       if (isGrounded) {

@@ -55,7 +55,7 @@ public class Card : MonoBehaviour {
   }
 
   void Generate() {
-    var rand = 3; //Random.Range(0, 4);
+    var rand = Random.Range(0, 4);
     RandomizeDirection();
     if (GameController.Instance.gauge >= 100f) {
       moveSpeed = initialMoveSpeed * (GameController.Instance.gauge / 100);

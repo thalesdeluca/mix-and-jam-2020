@@ -15,10 +15,21 @@ public class Card : MonoBehaviour {
   private Vector2 direction;
   public ActionCards action;
 
+  public Sprite cardS;
+  public Sprite cardN;
+  public Sprite cardG;
+  public Sprite cardF;
+
+  public Transform hitPosition;
+
+  public bool hit = false;
+
+
   // Start is called before the first frame update
   void Start() {
     Generate();
     GameController.updateState += ResetVelocity;
+    hitPosition = GameObject.Find("CardHit").transform;
   }
 
   void OnDestroy() {
@@ -28,6 +39,10 @@ public class Card : MonoBehaviour {
   void Update() {
     if (GameController.Instance.state == GameState.Preparation) {
       Move();
+    }
+
+    if (hit) {
+      this.transform.position = Vector2.MoveTowards(this.transform.position, hitPosition.position, 50f * Time.deltaTime);
     }
   }
 
@@ -64,12 +79,33 @@ public class Card : MonoBehaviour {
       }
     }
     action = (ActionCards)rand;
+
+    switch (action) {
+      case ActionCards.Neutral:
+        GetComponent<SpriteRenderer>().sprite = cardN;
+        break;
+      case ActionCards.Focus:
+        GetComponent<SpriteRenderer>().sprite = cardF;
+        break;
+      case ActionCards.Special:
+        GetComponent<SpriteRenderer>().sprite = cardS;
+        break;
+      case ActionCards.Guard:
+        GetComponent<SpriteRenderer>().sprite = cardG;
+        break;
+      default:
+        break;
+    }
   }
 
   public void Hit() {
     GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+    hit = true;
+    this.transform.parent = GameObject.Find("CardHit").transform;
     switch (action) {
       case ActionCards.Focus:
+
         GameObject.Find("Player").AddComponent<FocusAction>();
         break;
       case ActionCards.Guard:

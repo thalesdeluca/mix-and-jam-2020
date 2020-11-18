@@ -49,7 +49,7 @@ public class GameController : Controller {
   public float readyTime = 3f;
   public bool ready = false;
 
-  private bool won = false;
+  public bool won = false;
 
   public Camera camera;
 
@@ -232,7 +232,7 @@ public class GameController : Controller {
 
   public void HitBounds(GameObject obj) {
     if (state == GameState.Battle) {
-      won = obj.tag != "Player";
+      won = obj.name != "Player";
       victory.SetActive(true);
       ChangePhase(GameState.Victory);
       updateState();

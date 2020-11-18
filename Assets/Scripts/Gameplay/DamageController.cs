@@ -18,6 +18,12 @@ public class DamageController : MonoBehaviour {
 
   public bool onKnockback = false;
 
+  public AudioSource source;
+
+  private void Start() {
+    source = this.gameObject.transform.Find("HitSource").GetComponent<AudioSource>();
+  }
+
   private void Update() {
     if (lastColliderId) {
       var obj = lastColliderId.GetComponent<Action>();
@@ -55,6 +61,7 @@ public class DamageController : MonoBehaviour {
   }
 
   void Knockback(float damage) {
+    source.Play();
     var rigidbody = this.gameObject.GetComponent<Rigidbody2D>();
     var direction = this.gameObject.name == "Player" ? -1 : 1;
     //rigidbody.velocity = new Vector2(rigidbody.velocity.x + (gauge * direction / 2f), rigidbody.velocity.y);
@@ -88,7 +95,7 @@ public class DamageController : MonoBehaviour {
 
       if (canBeKnockedback) {
         Debug.Log("canbe");
-        Knockback(other.gameObject.transform.parent.GetComponent<Action>().damage);
+        Knockback(other.gameObject.transform.parent.parent.GetComponent<Action>().damage);
       }
     }
 
@@ -96,7 +103,7 @@ public class DamageController : MonoBehaviour {
       canBeKnockedback = true;
       id = other.gameObject.GetInstanceID();
       lastColliderId = other.gameObject;
-      TakeDamage(other.gameObject.transform.parent.GetComponent<Action>().damage);
+      TakeDamage(other.gameObject.transform.parent.parent.GetComponent<Action>().damage);
     }
   }
 
@@ -117,7 +124,7 @@ public class DamageController : MonoBehaviour {
       Debug.Log("Stay");
       if (canBeKnockedback) {
         Debug.Log("canbe");
-        Knockback(other.gameObject.transform.parent.GetComponent<Action>().damage);
+        Knockback(other.gameObject.transform.parent.parent.GetComponent<Action>().damage);
       }
     }
   }

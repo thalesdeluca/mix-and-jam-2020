@@ -28,8 +28,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5862674283867629767}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.917, y: -1.019, z: 0}
-  m_LocalScale: {x: 1.237587, y: 1.7919545, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 95caa8f5bf487ed468f54ec2f794a515, type: 3}
-  m_Color: {r: 0, g: 0.5095419, b: 0.8679245, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -145,3 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 3.8
   action: 0
+  cardS: {fileID: 21300000, guid: 8a16cae0d38f77542a9acdb4708b3569, type: 3}
+  cardN: {fileID: 21300000, guid: ff327522140d4e1418d505e8af013d41, type: 3}
+  cardG: {fileID: 21300000, guid: c307131956fe55c4fa61f8a5e3ad812a, type: 3}
+  cardF: {fileID: 21300000, guid: 2beb4cffb0d8c294a8255d1cb6271d08, type: 3}

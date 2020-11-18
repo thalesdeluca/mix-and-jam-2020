@@ -38,6 +38,15 @@ public class SpecialAction : Action {
       }
 
       if (controller.frames >= frames) {
+        var card = GameObject.Find("CardHit");
+        if (card.transform.childCount > 0) {
+          var child = card.transform.GetChild(0);
+          if (child) {
+            Destroy(child.gameObject);
+          }
+        }
+
+
         Destroy(this);
       }
     }
@@ -65,9 +74,15 @@ public class SpecialAction : Action {
     var gameObject = Instantiate(GameController.Instance.hitbox, obj.transform);
     Vector2 offset = this.gameObject.name == "Enemy" ? -new Vector2((range / 2f) + 0.5f, 0)
   : new Vector2((range / 2f) + 0.5f, 0);
-    gameObject.transform.localScale = new Vector3(range, 1, 1);
-    gameObject.transform.localPosition = offset;
+    var joint = gameObject.transform.Find("joint");
+    joint.transform.localScale = new Vector3(range, 1, 1);
 
+    var punch = gameObject.transform.Find("arm");
+    punch.transform.localPosition = new Vector2(joint.GetComponent<BoxCollider2D>().bounds.size.x + 0.8f, 0);
+    gameObject.transform.localPosition = offset;
+    if (this.gameObject.name == "Enemy") {
+      gameObject.transform.eulerAngles = Vector2.up * 180;
+    }
     return gameObject;
   }
 

@@ -26,6 +26,15 @@ public class GuardAction : Action {
 
     if (used) {
       if (controller.frames >= frames) {
+        var card = GameObject.Find("CardHit");
+        if (card.transform.childCount > 0) {
+          var child = card.transform.GetChild(0);
+          if (child) {
+            Destroy(child.gameObject);
+          }
+        }
+
+
         Destroy(this);
       }
     }

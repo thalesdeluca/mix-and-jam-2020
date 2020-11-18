@@ -22,8 +22,12 @@ public class SlingshotController : MonoBehaviour {
 
   private float projectileSpeed = 20f;
 
-  // Start is called before the first frame update
+  private AudioSource source;
 
+  // Start is called before the first frame update
+  private void Start() {
+    source = this.transform.Find("ShootSource").GetComponent<AudioSource>();
+  }
   void Awake() {
     GameController.updateState += EnableAim;
 
@@ -54,7 +58,7 @@ public class SlingshotController : MonoBehaviour {
       return;
     }
     canAim = false;
-
+    source.Play();
     ThrowProjectile(aim.transform.position);
 
     if (aim) {
@@ -80,6 +84,7 @@ public class SlingshotController : MonoBehaviour {
 
     Vector2 sides = this.transform.position - aim.transform.position;
     transform.up = -sides;
+    GameObject.Find("Handle").transform.up = -sides;
   }
 
   public void EnableAim() {

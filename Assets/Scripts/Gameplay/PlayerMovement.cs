@@ -10,10 +10,12 @@ public class PlayerMovement : MonoBehaviour {
   public bool isGrounded = false;
 
   public Transform initialPosition;
+  private AudioSource source;
 
   // Start is called before the first frame update  void Start()
   void Start() {
     rigidbody = GetComponent<Rigidbody2D>();
+    source = this.transform.Find("JumpSource").GetComponent<AudioSource>();
   }
 
   private void Awake() {
@@ -56,11 +58,11 @@ public class PlayerMovement : MonoBehaviour {
 
       if (isGrounded) {
         if (jump > 0) {
+          source.Play();
           if (rigidbody.velocity.y < jumpForce) {
-            Vector2 jumpVector = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y + 1);
+            Vector2 jumpVector = new Vector2(rigidbody.velocity.x, jumpForce);
             rigidbody.velocity = jumpVector;
           }
-
         }
       }
 
